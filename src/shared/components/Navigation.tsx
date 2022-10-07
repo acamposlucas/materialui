@@ -7,10 +7,12 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	useMediaQuery,
 	useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { ReactNode } from "react";
+import { useDrawerContext } from "../contexts";
 
 interface INavigation {
 	children: ReactNode;
@@ -18,10 +20,16 @@ interface INavigation {
 
 export const Navigation = ({ children }: INavigation) => {
 	const theme = useTheme();
+	const isScreenMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+	const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
 
 	return (
 		<>
-			<Drawer variant="permanent">
+			<Drawer
+				open={isDrawerOpen}
+				variant={isScreenMobile ? "temporary" : "permanent"}
+				onClose={toggleDrawerOpen}>
 				<Box
 					width={theme.spacing(28)}
 					height="100%"
@@ -52,9 +60,7 @@ export const Navigation = ({ children }: INavigation) => {
 					</Box>
 				</Box>
 			</Drawer>
-			<Box
-				height="100vh"
-				marginLeft={theme.spacing(28)}>
+			<Box height="100vh" marginLeft={isScreenMobile ? 0 : theme.spacing(28)}>
 				{children}
 			</Box>
 		</>
